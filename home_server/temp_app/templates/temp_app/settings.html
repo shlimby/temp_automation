@@ -1,0 +1,384 @@
+<!-- Include base html in order to have consistent appearance -->
+{% extends "../base.html" %}
+
+<!-- This code will bo put into part content of base html -->
+{% block content %}
+
+    <!-- Head -->
+    <div class="pt-5 text-white">
+        <header class="py-5 mt-5">
+            <h1 class="display-4">Settings</h1>
+            <p class="lead mb-0">Hier wird beschrieben wie mittels der Admin seite Einträge in der Datenbank erstellt werden.
+            </p>
+        </header>
+    </div>
+
+
+    <h3>Settings</h3>
+    <div class="mb-5">
+        <p>
+            Hier können allgemeine Einstellungen geändert werden.
+        </p>
+        <details class="px-4">
+            <summary>Ändern der Einstellungen</summary>
+            <form action="update/settings/" method="get">
+                <table class="styled-table">
+    
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Wert
+                            </th>
+                            <th>
+                                Beschreibung
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                        {%for key, value in settings.items %}
+    
+                        <td>
+                            {{key}}
+                        </td>
+                        <td>
+                            <input type="text" name="{{key}}" value="{{value.value}}">
+                        </td>
+                        <td>
+                            {{value.description}}
+                        </td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit">Settings Ändern</button>
+            </form>
+        </details>
+    </div>
+
+    <h3>Tabellen anlegen</h3>
+
+    <div class="mb-5">
+        
+        <p>
+            Hier können Tabellen angelegt werden
+        </p>
+        <h4>Chatbot anlegen</h4>
+
+        <details class="px-4">
+            <summary>Anlegen eines Chatbots</summary>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Username
+                        </th>
+                        <th>
+                            Bot Token
+                        </th>
+                        <th>
+                            Chat Id
+                        </th>
+                        <th>
+            
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in chat_users %}
+                    <tr>
+                        <form action="update/chat_user/" method="get">
+                            <input type="hidden" name="pk" value="{{user.pk}}" />
+                            <td>
+                                <input type="text" name="username" value="{{user.username}}">
+                            </td>
+                            <td>
+                                <input type="text" name="bot_token" value="{{user.bot_token}}">
+                            </td>
+                            <td>
+                                <input type="number" name="chat_id" value="{{user.chat_id}}">
+                            </td>
+                            <td>
+                                <button type="submit">User Ändern</button>
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+            
+                    <!-- New Chat User -->
+                    <tr>
+                        <form action="create/chat_user/" method="get">
+                            <td>
+                                <input type="text" name="username" placeholder="username">
+                            </td>
+                            <td>
+                                <input type="text" name="bot_token" placeholder="Bot Token">
+                            </td>
+                            <td>
+                                <input type="number" name="chat_id" placeholder="Chat Id">
+                            </td>
+                            <td>
+                                <button type="submit">User Anlagen</button>
+                            </td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
+        </details>
+
+        
+
+        <!-- Orte Anlegen -->
+        <h4>Ort anlegen</h4>
+        <details class="px-4">
+            <summary>Anlegen eines Ortes</summary>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Chatbot
+                        </th>
+                        <th>
+                            Postleitzahl
+                        </th>
+                        <th>
+                            Country Code
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+            
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in places %}
+                    <tr>
+                        <form action="update/place/" method="get">
+                            <input type="hidden" name="pk" value="{{x.pk}}" />
+                            <td>
+                                <select name="foreign_pk">
+                                    {% for chat_user in chat_users %}
+                                    <!-- Problems with multiple choices -->
+                                    {% if chat_user in x.owner %}
+                                    <option value="{{chat_user.pk}}" selected>{{chat_user.username}}</option>
+                                    {% else %}
+                                    <option value="{{chat_user.pk}}">{{chat_user.username}}</option>
+                                    {% endif %}
+            
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="zip_code" value="{{x.zip_code}}">
+                            </td>
+                            <td>
+                                <input type="text" name="country_code" value="{{x.country_code}}">
+                            </td>
+                            <td>
+                                <input type="text" name="name" value="{{x.name}}">
+                            </td>
+                            <td>
+                                <button type="submit">Ort Ändern</button>
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+            
+                    <!-- New Place -->
+                    <tr>
+                        <form action="create/place/" method="get">
+                            <td>
+                                <select name="foreign_pk">
+                                    <option value="" selected disabled hidden>Wähle aus</option>
+                                    {% for x in chat_users %}
+                                    <option value="{{x.pk}}">{{x.username}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="zip_code" placeholder="Zip Code">
+                            </td>
+                            <td>
+                                <input type="text" name="country_code" placeholder="Country Code">
+                            </td>
+                            <td>
+                                <input type="text" name="name" placeholder="Name">
+                            </td>
+                            <td>
+                                <button type="submit">Ort Anlagen</button>
+                            </td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
+        </details>
+        
+
+
+        <h4>Räume anlegen</h4>
+
+        <details class="px-4">
+            <summary>Anlegen eines Raumes</summary>
+            <table class="styled-table">
+            
+                <thead>
+                    <tr>
+                        <th>
+                            Ort
+                        </th>
+                        <th>
+                            Raum Art
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+            
+                        </th>
+                    </tr>
+                </thead>
+            
+                <tbody>
+                    {% for x in rooms %}
+                    <tr>
+                        <form action="update/room/" method="get">
+                            <input type="hidden" name="pk" value="{{x.pk}}" />
+                            <td>
+                                <select name="foreign_pk">
+                                    {% for place in places %}
+                                    {% if place.pk == x.place.pk %}
+                                        <option value="{{place.pk}}" selected>{{place.name}}</option>
+                                    {% else %}
+                                        <option value="{{place.pk}}">{{place.name}}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                    <!-- <option value="{{x.place}}" selected>{{x.place}}</option> -->
+                                </select>
+                            </td>
+                            <td>
+                                <select name="room_type">
+                                    {% for choice in room_type_choices %}
+                                        {% if choice.0 == x.room_type %}
+                                            <option value="{{choice.0}}" selected>{{choice.1}}</option>
+                                        {% else %}
+                                            <option value="{{choice.0}}">{{choice.1}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="name" value="{{x.name}}">
+                            </td>
+                            <td>
+                                <button type="submit">Raum Ändern</button>
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+            
+                    <!-- New Room -->
+                    <tr>
+                        <form action="create/room/" method="get">
+                            <td>
+                                <select name="foreign_pk">
+                                    <option value="" selected disabled hidden>Wähle aus</option>
+                                    {% for x in places %}
+                                    <option value="{{x.pk}}">{{x.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="room_type">
+                                    <option value="" selected disabled hidden>Wähle aus</option>
+                                    {% for x in room_type_choices %}
+                                    <option value="{{x.0}}">{{x.1}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="name" placeholder="Name">
+                            </td>
+                            <td>
+                                <button type="submit">Ort Anlagen</button>
+                            </td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
+        </details>
+        
+
+
+        
+
+        <h4>Sensor anlegen</h4>
+        <details class="px-4">
+            <summary>Anlegen eines Sensors</summary>
+            <table class="styled-table">
+            
+                <thead>
+                    <tr>
+                        <th>
+                            IP
+                        </th>
+                        <th>
+                            Sensorname
+                        </th>
+                        <th>
+                            Raum
+                        </th>
+                        <th>
+            
+                        </th>
+                    </tr>
+                </thead>
+            
+            
+            
+                <tbody>
+                    {% for missing_entrie in missing_entries %}
+            
+                    <tr>
+                        <form action="create/sensor" method="get">
+                            <td>
+                                {{missing_entrie.ip}}
+                                <input type="hidden" name="entry_ip" value="{{missing_entrie.ip}}" />
+                            </td>
+                            <td>
+                                <input type="text" name="sensor_name">
+                            </td>
+                            <td>
+                                <select name="room_pk">
+                                    {% for room in rooms %}
+                                    <option value="{{room.pk}}">{{room.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <button type="submit">
+                                    Sensor anlegen
+                                </button>
+                            </td>
+                        </form>
+                    </tr>
+            
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </details>
+        
+    </div>
+
+    
+    
+    
+
+    
+    
+
+{% endblock %}

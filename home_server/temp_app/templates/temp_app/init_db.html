@@ -1,0 +1,101 @@
+<!-- Include base html in order to have consistent appearance -->
+{% extends "../base.html" %}
+
+<!-- This code will bo put into part content of base html -->
+{% block content %}
+
+    <!-- Load static files in order to use assets -->
+    {% load static %}
+
+    <!-- Head -->
+    <header class="py-5 mt-5">
+        <h1 class="display-4">Initialisiere die Datenbank</h1>
+        <p class="lead mb-0">Hier wird beschrieben wie mittels der Admin seite Einträge in der Datenbank erstellt werden.</p>
+    </header>
+
+    <!-- Text -->
+    <div class="py-5">
+        <h4>Admin Account</h4>
+        <p>
+            Wenn Sie es bis hier hin geschafft haben, dann haben Sie bereits die Datenbak initialisert und einen Admin (Super User) erstellt.
+            Hoffentlich haben Sie sich den Benutzernamen und das Passweort gemerkt, dann nun wird es wichtig.
+            Falls Sie den etwas davon vergessen haben, haben Sie die Möglichkeit über 
+
+            <!-- code -->
+            <pre>
+                <code class="bash">
+                    python3 manage.py createsuperuser
+                </code>
+            </pre>
+            einen neuen Admin zu erstellen.
+            Damit das klappt muss sich Ihr Bash-Terminal im Verzeichnis des ClimateCheckers befinden.
+        </p>
+
+        <h4>Admin Home Seite</h4>
+        <p >
+            Klicken Sie auf den Link <a href="/admin/">Admin</a>, werden Sie auf die Admin Seite von Django weitergeleitet.
+            Geben Sie dort den Benutzernamen und das Passwort Ihres Admin Accounts ein.
+            Sind Ihre Daten korrekt, so landen Sie in einer Übersicht, die in etwa nachstehend aussieht.
+            <br/>
+            <img src="{% static 'assets/admin_home.JPG' %}" alt="Home Ansicht" style="width:50%"/>
+            <br/>
+            Unter dem Reiter "APP" finden sich die Namen Klassen zu denen Einträge erstellt werden können.
+            Damit Daten eingepflegt werden können, muss zu den nachstehenden Klassen mindest ein Eintrag erstellt werden: 
+            <ul>
+                <li>Chat users</li>
+                <li>Places</li>
+                <li>Rooms</li>
+            </ul>
+        </p>
+
+        <h4>Hinzufügen eines Tabelleneintrages</h4>
+        <p>
+            Wird auf den Link "+Add" einer Klasse geklickt, so öffnet sich eine Form.
+            Wird diese Form korrekt ausgefüllt und gespeichert, wird in der Datenbank ein Eintrag hinzugefügt.
+            Die eingetragenen Daten können anschließen abgerufen werde.
+            <br />
+            <img src="{% static 'assets/admin_add.JPG' %}" alt="Home Ansicht" style="width:80%" />
+            <br />
+            Beim eintragen gilt, dass die Fett geschrieben Felder Pflichfelder sind.
+            Ander felder können ausgelassen werden.
+            Dies könnte jedoch zu Einschränkungen in den Funktionen führen.
+
+        </p>
+        <h4>Chat User</h4>
+        <p>
+            Am Besten wird zuerst ein Chat User erstellt. Dieser benötigt midestens einen Namen.
+            Wenn ein Chat-Bot benutzt werden soll, muss der Token des Bots und die Chat-Id deines Chats angegebene werden.
+        </p>
+        <h4>Places</h4>
+        <p>
+            Als nächstes sollte ein Ort erstellt werden.
+            Ein Ort beinhält Informationen über deine Wohnungc dein Haus, etc.
+            Über die dort angegebenen Daten werden Informationen über die Außentemperatur gesammelt.
+            Außerdem wird der Ort mindestens einem Chat User zugeordent.
+            Dieser wird über Telegram benachrichtigt, falls beispielsweise gelüftet werden muss.
+            <br>
+            <br>
+            Möchsten Sie die Website nicht nur lokal im eigenen Netz betreigen, können Sie hier mehrer Orte eintragen.
+            So werden die Daten zentral bei Ihnen gelagert und können diese von überall aus abrufen.
+            Diese müssten Sie jedoch selber implementieren, dann dafür fehlen wichtig Sicherheitsmaßnahmen.
+            Für eine Kostenfreie Nutzung der OpenWather API ist eine maximale Anzahl von ca. 110 Orten möglich.
+            Aktuell ist der Betrieb dieser Webseite nur im Lokeln Netz vorgesehen.
+            
+        </p>
+        <h4>Rooms</h4>
+        <p>
+            Zuguterletzt muss mindestens ein Raum erstellt werden. Dieser Raum muss einem Ort zugewiesen werden.
+            Der Raum beinhält Informationen über die Art des Raumes.
+            Somit können Entscheidungen über das Lüften getroffen werden.
+        </p>
+
+        <h4>Nächsten Schritte</h4>
+        <p>
+            Wenn die erfolgreich die oben genannten Einträge erstellt haben, sind Sie fast fertig mit der Initialisierung.
+            Es können nun Daten über die Umgebungsbedingung gesammelt werden.
+            Es fehlen nurnoch Sensoren, welche die Temperaturen im Inneren der Räume messen.
+            Dazu folgen Sie einfach der Anleitung unter <a href="/init_sensor/">INIT SENSOR</a>.
+        </p>
+    </div>
+
+{% endblock %}

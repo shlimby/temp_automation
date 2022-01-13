@@ -1,0 +1,192 @@
+<!-- Include base html in order to have consistent appearance -->
+{% extends "../base.html" %}
+
+<!-- This code will bo put into part content of base html -->
+{% block content %}
+
+    <!-- Head -->
+    <header class="py-5 mt-5">
+        <h1 class="display-4">Initialisiere Sensor</h1>
+        <p class="lead mb-0">Hier wird beschrieben wie ein Sensor initialisert wird.</p>
+    </header>
+
+    <!-- Text -->
+    <div class="py-5">
+
+        <h3>Installiere Git</h3>
+        <p>
+            
+            Dazu muss zunächst Git auf dem Raspberry Pi mit dem angeschlossenen Sensor installiert werden. <br>
+            Am schnellsten geht das mit folgenden Bash Befehlen:
+            <!-- code -->
+            <pre>
+                <code class="bash">
+                    sudo apt update
+                    sudo apt install git
+                </code>
+            </pre>
+
+            Anschließend kann Git mit den nachstenden Zeilen konfiguriert werden: 
+
+            <pre>
+                <code class="bash">
+                    git config --global user.name "Your Name"
+                    git config --global user.email "youremail@yourdomain.com"
+                </code>
+            </pre>
+        </p>
+
+        <h3>Runterladen des Projektes</h3>
+        <p>
+            Innerhalb des Netzwerkes können beliebig viel Sensoren installiert werden.
+            Jeder Sensor funtkioniert unabhängig voneinander und kommuniziert mit dem Sever.
+            Ein Sensor kann initialisert werden, indem zunächst das Git-Reposetory
+            https://git.haw-hamburg.de/acj509/temp_automation_sensor.git in ein beliebiges Verzeichnis geklont wird.
+            <br>
+            Dazu muss Git auf dem entsprechenden Raspberry Pi installiert werden.
+            Dies haben Sie bereits im bei der Erstellung des Servers gemacht.
+            Wiederholen Sie einach die Anleitung für das Gerät mir dem Sensor, wenn dort noch kein Git installiert ist.
+            <br>
+            Mit dem Bash Befehlen
+
+            <pre>
+                <code class="bash">
+                    cd /home/pi
+                    git clone git@git.haw-hamburg.de:acj509/temp_automation_sensor.git
+                    sudo chmod 777 -R temp_automation_sensor
+                    cd temp_automation_sensor/
+                    pip3 install -r requirements.txt
+                </code>
+            </pre>
+            
+            wird ein Ordner "temp_automation_sensor" im Verzeichnis "/home/pi/" erstellt.
+            In diesem Ordner befinden sich nun die nötigen Programme zum initialiseren.
+            
+
+        </p>
+        
+
+        <h3>Sensor initialiseren</h3>
+        <p>
+            Als erstes wird der Code 
+            <pre>
+                <code class="bash">
+                    
+                    sudo nano settings.json
+                </code>
+            </pre>
+            ausgeführt.
+            Es wird die Setting Datei geöffnet in der sich ein Code befindet, der ungefähr so aussieht:
+
+            <pre>
+                <code class="bash">
+                    "sensor_data": {
+                        ...
+                        "init": {
+                            "room": 1, // Id of Room
+                            "name": "uniqueName", // Name of Sensor, musst be unique
+                        },
+                        ...
+                    },
+                </code>
+            </pre>
+
+            In dem Object "init" müssen nun die gewünschten Daten eingetragen und gespeichert werd werden.
+            Die Ids können aus den Tabellen unten abgelesen werden. Die  <br>
+            Sind alle daten des "init"-Objectes eingetragen wird folgender Code ausgeführt:
+
+            <pre>
+                <code class="bash">
+                    ./run_init.sh
+                </code>
+            </pre>
+
+
+            Damit ein Sensor seine Requests an den Server senden kann, muss der Sensor in der Datenbank angelegt werden.
+            Der Sensor kann sich selber erstellen. Dazu müssen jedoch die gewünschen Daten eingetragen werden.
+            
+
+        </p>
+    </div>
+    
+    <!-- Tables -->
+    <h3>Anlegte Räume</h3>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Ort
+                </th>
+                <th>
+                    Raumart
+                </th>
+            </tr>
+        </thead>
+    
+        <tbody>
+            {% for room in rooms %}
+            <tr>
+                <td>
+                    {{room.id}}
+                </td>
+                <td>
+                    {{room.name}}
+                </td>
+                <td>
+                    {{room.place}}
+                </td>
+                <td>
+                    <!-- Get name of roomtype by first touple -->
+                    {% for option in place_options %}
+                        {%if option.0 == room.room_type %}
+                            {{option.1}}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    
+    </table>
+
+    <h3>Alle angelegten Sensoren</h3>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>
+                    id
+                </th>
+                <th>
+                    Raum name
+                </th>
+                <th>
+                    Name des Raumes
+                </th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for sensor in sensors %}
+            <tr>
+                <td>
+                    {{sensor.id}}
+                </td>
+                <td>
+                    {{sensor.name}}
+                </td>
+                <td>
+                    {{sensor.room}}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+
+{% endblock %}

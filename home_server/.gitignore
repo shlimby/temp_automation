@@ -1,0 +1,6 @@
+db.sqlite3
+*migrations/
+*__pycache__/
+static/*
+home_server/.env
+settings_dev.json

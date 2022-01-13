@@ -1,0 +1,39 @@
+{% extends "../base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+    <!-- For demo purpose -->
+    <div class="pt-5 text-white">
+        <header class="py-5 mt-5">
+            <h1 class="display-4">Home</h1>
+            <p class="lead mb-0">Dies ist die Home ansicht unsere Anwenung. Hier kommen Statistiken hin.</p>
+        </header>
+	<canvas id="myCanvas">
+            Your browser does not have support for Canvas.
+        </canvas>
+	<p id='texas'></p>
+
+        <script>
+            function load_data() {
+                return {{ data|safe}}
+            }
+            function load_outData() {
+                return {{ outData|safe }}
+            }
+            function load_sensors() {
+                return {{ sensors|safe}}
+            }
+        </script>
+	<script type="module" src="{% static 'js/home.js' %}"></script>
+        <!-- <div class="py-5">
+            <p class="lead">
+                Hello, world. Ansicht erstellt in App/views.py. <br />
+                Url-Verlauf: climateChecker/urls.py -> Wenn kein Urls-Anhang
+                wird auf app/urls weitergeleitet -> Ruft index Funktion in app/views.py auf
+            </p>
+        </div> -->
+    </div>
+
+{% endblock %}

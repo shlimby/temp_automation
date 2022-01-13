@@ -1,0 +1,35 @@
+<!-- Include base html in order to have consistent appearance -->
+{% extends "../base.html" %}
+
+<!-- This code will bo put into part content of base html -->
+{% block content %}
+
+<!-- Load static files in order to use assets -->
+{% load static %}
+
+<!-- Head -->
+<header class="py-5 mt-5">
+    <h1 class="display-4">Initialisiere</h1>
+    <p class="lead mb-0">
+        Sie möchsten etwas initialisiseren? Hier sind die Links zu den zweiligen Themen
+    </p>
+</header>
+
+<!-- Text -->
+<div class="py-5">
+    <h4>Admin Account</h4>
+    <p>
+        Wenn Sie es bis hier hin geschafft haben, dann haben Sie bereits die Datenbak initialisert und einen Admin
+        (Super User) erstellt.
+        Hoffentlich haben Sie sich den Benutzernamen und das Passweort gemerkt, dann nun wird es wichtig.
+        Falls Sie den etwas davon vergessen haben, haben Sie die Möglichkeit über
+
+        <!-- code -->
+    <pre>
+        <code class="bash">
+            python3 manage.py createsuperuser
+        </code>
+    </pre>
+</div>
+
+{% endblock %}

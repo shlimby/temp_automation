@@ -1,0 +1,6 @@
+{
+  "api_key": {
+    "value": "",
+    "description": "Der Schlüssel wird benötigt, um Daten über die Außentemperatur zu sammeln. Bitte erstellen Sie einen eigenen Schlüssel unter dem Link: https://openweathermap.org/price. Ein Kostenloser Schlüssel reicht aus."
+  }
+}
